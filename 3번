@@ -1,0 +1,72 @@
+숫자 야구판정 게임을 작성하시오 c언어로
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main() {
+    int com[3]; // 컴퓨터가 만든 정답 숫자 3개
+    int user[3]; // 사용자가 입력할 숫자 3개
+    int strike, ball;
+    int count = 0;
+
+    srand((unsigned int)time(NULL));
+
+    // 1. 서로 다른 3개의 난수 생성 (1~9 범위)
+    com[0] = rand() % 9 + 1;
+    
+    do {
+        com[1] = rand() % 9 + 1;
+    } while (com[1] == com[0]);
+
+    do {
+        com[2] = rand() % 9 + 1;
+    } while (com[2] == com[0] || com[2] == com[1]);
+
+    printf("=========================================\n");
+    printf("        숫자 야구 게임을 시작합니다!       \n");
+    printf("     (1~9 사이의 서로 다른 숫자 3개 맞추기) \n");
+    printf("=========================================\n\n");
+
+    // 2. 게임 루프 시작
+    while (1) {
+        count++;
+        strike = 0;
+        ball = 0;
+
+        printf("[%d번째 시도] 숫자 3개를 입력하세요 (예: 1 2 3): ", count);
+        scanf("%d %d %d", &user[0], &user[1], &user[2]);
+
+        // 입력값 중복 확인
+        if (user[0] == user[1] || user[1] == user[2] || user[0] == user[2]) {
+            printf("⚠️ 중복되지 않은 숫자를 입력해주세요!\n\n");
+            continue;
+        }
+
+        // 3. 스트라이크 / 볼 판정
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (com[i] == user[j]) {
+                    if (i == j) {
+                        strike++; // 자릿수와 숫자가 모두 일치
+                    } else {
+                        ball++;   // 숫자는 맞지만 자릿수가 다름
+                    }
+                }
+            }
+        }
+
+        // 4. 결과 출력
+        if (strike == 3) {
+            printf("\n🎉 정답입니다! [%d %d %d]\n", com[0], com[1], com[2]);
+            printf("총 %d번 만에 맞추셨습니다!\n", count);
+            break;
+        } else if (strike == 0 && ball == 0) {
+            printf("결과: OUT (아웃)\n\n");
+        } else {
+            printf("결과: %d Strike, %d Ball\n\n", strike, ball);
+        }
+    }
+
+    return 0;
+}
